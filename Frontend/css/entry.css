@@ -1,14 +1,69 @@
-.container {
-  max-width: 700px;
-  margin: auto;
-  padding: 20px;
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background: #0f1115;
+  color: #fff;
+  overflow: hidden;
 }
 
-.emotion {
+.page {
+  height: 100vh;
   display: flex;
-  justify-content: space-between;
-  padding: 8px;
-  margin: 5px 0;
-  background: #333;
-  border-radius: 6px;
+  justify-content: center;
+  align-items: center;
+}
+
+.entry-panel {
+  width: 40%;
+  min-width: 320px;
+  padding: 18px;
+  border-radius: 12px;
+  background: #1a1d24;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+  max-height: 80vh;
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+
+h2 {
+  margin-top: 0;
+}
+
+.subtext {
+  color: #aaa;
+  margin-bottom: 12px;
+}
+
+.emotion-slider {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 10px;
+}
+
+.emotion-slider label {
+  margin-bottom: 3px;
+  font-size: 13px;
+  color: #ddd;
+}
+
+input[type="range"] {
+  width: 100%;
+  cursor: pointer;
+}
+
+.create-btn {
+  margin-top: 8px;
+  width: 100%;
+  padding: 10px;
+  border: none;
+  border-radius: 8px;
+  background: #4cafef;
+  color: white;
+  font-size: 15px;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.create-btn:hover {
+  background: #3a9ad9;
 }

@@ -1,37 +1,51 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Entry</title>
+  <title>Create Entry</title>
   <link rel="stylesheet" href="css/base.css">
   <link rel="stylesheet" href="css/entry.css">
 </head>
 
 <body>
 
-  <div class="container">
+  <div class="page">
 
-    <div class="card">
-      <h2>Entry #1</h2>
-      <p style="color:#aaa;">User: 5 | 2026-05-18</p>
-    </div>
+    <div class="card entry-panel">
 
-    <div class="card">
-      <h3>Emotions</h3>
+      <h2>Create New Entry</h2>
+      <p class="subtext">Adjust your emotions (0–100)</p>
 
-      <div class="emotion">
-        <span>Happy</span>
-        <span>80</span>
+      <div class="emotion-slider">
+        <label>Happy</label>
+        <input type="range" min="0" max="100" value="50">
       </div>
 
-      <div class="emotion">
-        <span>Stress</span>
-        <span>20</span>
+      <div class="emotion-slider">
+        <label>Sad</label>
+        <input type="range" min="0" max="100" value="50">
       </div>
 
-      <div class="emotion">
-        <span>Focus</span>
-        <span>60</span>
+      <div class="emotion-slider">
+        <label>Stress</label>
+        <input type="range" min="0" max="100" value="50">
       </div>
+
+      <div class="emotion-slider">
+        <label>Excited</label>
+        <input type="range" min="0" max="100" value="50">
+      </div>
+
+      <div class="emotion-slider">
+        <label>Calm</label>
+        <input type="range" min="0" max="100" value="50">
+      </div>
+
+      <div class="emotion-slider">
+        <label>Focused</label>
+        <input type="range" min="0" max="100" value="50">
+      </div>
+
+      <button class="create-btn">Create Entry</button>
 
     </div>
 
