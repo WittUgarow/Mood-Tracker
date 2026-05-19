@@ -1,0 +1,14 @@
+.container {
+  max-width: 700px;
+  margin: auto;
+  padding: 20px;
+}
+
+.emotion {
+  display: flex;
+  justify-content: space-between;
+  padding: 8px;
+  margin: 5px 0;
+  background: #333;
+  border-radius: 6px;
+}
