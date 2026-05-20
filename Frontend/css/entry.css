@@ -1,8 +1,13 @@
+* {
+  box-sizing: border-box;
+}
+
 body {
   margin: 0;
   font-family: Arial, sans-serif;
   background: #0f1115;
   color: #fff;
+  height: 100vh;
   overflow: hidden;
 }
 
@@ -11,49 +16,64 @@ body {
   display: flex;
   justify-content: center;
   align-items: center;
+  padding: 12px;
 }
 
 .entry-panel {
   width: 40%;
-  min-width: 320px;
-  padding: 18px;
-  border-radius: 12px;
+  min-width: 300px;
+  max-width: 480px;
+
   background: #1a1d24;
+  border-radius: 12px;
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
-  max-height: 80vh;
-  overflow-y: auto;
-  overflow-x: hidden;
+
+  padding: 14px;
+  display: flex;
+  flex-direction: column;
+
+  min-width: 0;
 }
 
+/* Title */
 h2 {
-  margin-top: 0;
+  margin: 0 0 6px 0;
+  font-size: 26px;
 }
 
+/* 🔧 THIS is the spacing you meant */
 .subtext {
+  margin: 0 0 10px 0;   /* reduced from 14px → tighter */
   color: #aaa;
-  margin-bottom: 12px;
+  font-size: 15px;
 }
 
+/* Slider groups */
 .emotion-slider {
   display: flex;
   flex-direction: column;
-  margin-bottom: 5px;
+  margin-bottom: 10px;
+  min-width: 0;
 }
 
+/* Labels */
 .emotion-slider label {
-  margin-bottom: 1px;
-  font-size: 13px;
+  margin: 0;
+  font-size: 15px;
   color: #ddd;
+  line-height: 1;
 }
 
+/* Slider */
 input[type="range"] {
   width: 100%;
-  cursor: pointer;
+  display: block;
+  margin-top: 3px;
 }
 
-.create-btn {
-  margin-top: 8px;
-  width: 100%;
+/* Button */
+#create-btn {
+  margin-top: 6px;
   padding: 10px;
   border: none;
   border-radius: 8px;
@@ -61,9 +81,12 @@ input[type="range"] {
   color: white;
   font-size: 15px;
   cursor: pointer;
-  transition: 0.2s;
 }
 
-.create-btn:hover {
+#create-btn:hover {
   background: #3a9ad9;
+}
+
+#create-btn:active {
+  transform: scale(0.98);
 }
