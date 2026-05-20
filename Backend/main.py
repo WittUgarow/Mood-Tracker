@@ -30,10 +30,6 @@ class EntryCreate(BaseModel):
     emotions: List[Emotion]
 
 
-@app.get("/")
-def read_root():
-    return {"Hello": "World"}
-
 @app.post("/login")
 def login(loginData : LoginData):
     with conn.cursor() as cur:
@@ -92,22 +88,36 @@ def getUserEntries(userId : int):
             """, (userId,))
         
         result = cur.fetchall()
-    
-    entries = {}
+    #return result
+    entries = []
+    currentId = 0
+    #if entry.length = 0 return
+    for i in range(len(result)):
+        entryId = result[i][0]
+        date = result[i][1]
+        emotion = result[i][2]
+        value = result[i][3]
+        if entryId != currentId:
+            currentId = result[i][0]
+            entries.append({"id": entryId, "created_at": date, "emotions": []})
+        entries[len(entries)-1]["emotions"].append({"type": emotion, "value":value})
+    return entries
 
-    for item in result:
-        entryId = item[0]
-        createdAt = item[1]
-        emotion = item[2]
-        emotionValue = item[3]
 
-        if entryId not in entries:
-            entries[entryId] = {
-                "created_at": createdAt,
-                "emotions": []    
-            }
+    # for item in result:
         
-        entries[entryId]["emotions"].append({"emotion": emotion, "emotion_value": emotionValue})  
+    #     entryId = item[0]
+    #     createdAt = item[1]
+    #     emotion = item[2]
+    #     emotionValue = item[3]
+
+    #     if entryId not in entries:
+    #         entries[entryId] = {
+    #             "created_at": createdAt,
+    #             "emotions": []    
+    #         }
+        
+    #     entries[entryId]["emotions"].append({"emotion": emotion, "emotion_value": emotionValue})  
     
     return entries
 
