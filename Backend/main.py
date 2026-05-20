@@ -88,9 +88,31 @@ def getUserEntries(userId : int):
             """, (userId,))
         
         result = cur.fetchall()
+    return buildReturn(result)
     #return result
+    
+
+@app.get("/entries/{entryId}")
+def getEntryById(entryId: int):
+    with conn.cursor() as cur:
+        cur.execute("""
+            SELECT 
+                    entries.id,
+                    entries.created_at,
+                    emotions.type,
+                    emotions.value
+            FROM entries
+            JOIN emotions ON
+                    emotions.entry_id = entries.id
+            WHERE entries.id = %s
+                    """, (entryId,))
+        result = cur.fetchall()
+    return buildReturn(result)  
+
+
+def buildReturn(result):
     entries = []
-    currentId = 0
+    currentId = None
     #if entry.length = 0 return
     for i in range(len(result)):
         entryId = result[i][0]
@@ -103,23 +125,6 @@ def getUserEntries(userId : int):
         entries[len(entries)-1]["emotions"].append({"type": emotion, "value":value})
     return entries
 
-
-    # for item in result:
-        
-    #     entryId = item[0]
-    #     createdAt = item[1]
-    #     emotion = item[2]
-    #     emotionValue = item[3]
-
-    #     if entryId not in entries:
-    #         entries[entryId] = {
-    #             "created_at": createdAt,
-    #             "emotions": []    
-    #         }
-        
-    #     entries[entryId]["emotions"].append({"emotion": emotion, "emotion_value": emotionValue})  
-    
-    return entries
 
 # API Endpoints
     # @app.post("/auth/login") #Handle logins5
@@ -141,6 +146,4 @@ def getUserEntries(userId : int):
     # Anxious
     # Depressed
     # Custom
-
-
-# Array for colors so custom colors update
+    # Array for colors so custom colors update
