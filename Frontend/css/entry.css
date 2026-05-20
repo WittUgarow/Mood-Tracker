@@ -37,11 +37,11 @@ h2 {
 .emotion-slider {
   display: flex;
   flex-direction: column;
-  margin-bottom: 10px;
+  margin-bottom: 5px;
 }
 
 .emotion-slider label {
-  margin-bottom: 3px;
+  margin-bottom: 1px;
   font-size: 13px;
   color: #ddd;
 }

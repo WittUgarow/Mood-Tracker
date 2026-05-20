@@ -37,12 +37,12 @@ def read_root():
 @app.post("/login")
 def login(loginData : LoginData):
     with conn.cursor() as cur:
-        cur.execute("SELECT password FROM users WHERE name=%s", (loginData.username,))
+        cur.execute("SELECT password, id FROM users WHERE name=%s", (loginData.username,))
         result = cur.fetchone()
         if result is None:
             return {"status": False, "error": "User not found"}
         if result[0].decode('utf-8') == loginData.password:
-            return {"status": True} 
+            return {"status": True, "userId": result[1]} 
         else:
             return {"status": False, "error": "Invalid password"}
     
