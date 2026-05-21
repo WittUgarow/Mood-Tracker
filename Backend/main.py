@@ -137,17 +137,16 @@ def buildReturn(result):
 def sortEmotions(emotions):
     emotionOrder = ["happy","hopeful","content","irritated","anxious","depressed"]
     sortedEmotions = [None] * 6
-
     for i in range(len(emotions)):
         try:
             index = emotionOrder.index(emotions[i]["type"].decode())
             sortedEmotions[index] = emotions[i]
             emotions[i] = None
         except:
-            pass
-
+          pass
+    sortedEmotions = list(filter(None, sortedEmotions))
     emotions = list(filter(None, emotions))
-    emotions = sorted(emotions, key=lambda x: x['type'])
+    emotions  = sorted(emotions, key=lambda x: x['type'])
     sortedEmotions.extend(emotions)
     return sortedEmotions
 

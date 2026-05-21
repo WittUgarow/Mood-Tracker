@@ -28,12 +28,16 @@ function createEntryElement(number, date, emotions){
         })
     }`
     entriesDiv.innerHTML += `
-        <div class="entry card" id="entry${number}">
-            <h3>Entry #${number}</h3>
-            <div class="entry-meta">${formattedDate} </div>
-            <div class="emotions">
-            </div>
-        </div>`
+            <div class="entry card" id="entry${number}">
+                <button class="inspect-btn"
+                    onclick="window.location.href='../HTML/entry-view.html?id=${number}'">
+                    Inspect
+                </button>
+
+                <h3>Entry #${number}</h3>
+                <div class="entry-meta">${formattedDate}</div>
+                <div class="emotions"></div>
+            </div>`
 
     const entryEmotions = document.querySelector(`#entry${number} .emotions`)
     for (let i = 0; i<emotions.length; i++){
