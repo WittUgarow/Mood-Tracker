@@ -127,8 +127,29 @@ def buildReturn(result):
             currentId = result[i][0]
             entries.append({"id": entryId, "created_at": date, "emotions": []})
         entries[len(entries)-1]["emotions"].append({"type": emotion, "value":value})
+    
+    for i in range(len(entries)):
+        #return sortEmotions(entries[i]["emotions"])
+        entries[i]["emotions"] = sortEmotions(entries[i]["emotions"])
+    
     return entries
 
+def sortEmotions(emotions):
+    emotionOrder = ["happy","hopeful","content","irritated","anxious","depressed"]
+    sortedEmotions = [None] * 6
+
+    for i in range(len(emotions)):
+        try:
+            index = emotionOrder.index(emotions[i]["type"].decode())
+            sortedEmotions[index] = emotions[i]
+            emotions[i] = None
+        except:
+            pass
+
+    emotions = list(filter(None, emotions))
+    emotions = sorted(emotions, key=lambda x: x['type'])
+    sortedEmotions.extend(emotions)
+    return sortedEmotions
 
 # API Endpoints
     # @app.post("/auth/login") #Handle logins5
