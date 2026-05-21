@@ -30,6 +30,10 @@ class EntryCreate(BaseModel):
     emotions: List[Emotion]
 
 
+@app.get("/")
+async def root():
+    return {"message": "Hello World"}
+
 @app.post("/login")
 def login(loginData : LoginData):
     with conn.cursor() as cur:
