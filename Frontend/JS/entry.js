@@ -1,48 +1,45 @@
-const happySlider = document.getElementById("happySlider")
-const hopefulSlider = document.getElementById("hopefulSlider")
-const contentSlider = document.getElementById("contentSlider")
-const irritatedSlider = document.getElementById("irritatedSlider")
-const anxiousSlider = document.getElementById("anxiousSlider")
-const depressedSlider = document.getElementById("depressedSlider")
+const defaultEmotions = ["happy", "hopeful", "content", "irritated", "anxious", "depressed"]
+const emotionsPanel = document.querySelector(".emotions")
+
+
+// const happySlider = document.getElementById("happySlider")
+// const hopefulSlider = document.getElementById("hopefulSlider")
+// const contentSlider = document.getElementById("contentSlider")
+// const irritatedSlider = document.getElementById("irritatedSlider")
+// const anxiousSlider = document.getElementById("anxiousSlider")
+// const depressedSlider = document.getElementById("depressedSlider")
 const submitBtn = document.getElementById("create-btn")
 const userId = localStorage.getItem("userId")
 
-submitBtn.addEventListener('click', async () => {
-    const happyValue = Number(happySlider.value)
-    const hopefulValue = Number(hopefulSlider.value)
-    const contentValue = Number(contentSlider.value)
-    const irritatedValue = Number(irritatedSlider.value)
-    const anxiousValue = Number(anxiousSlider.value)
-    const depressedValue = Number(depressedSlider.value)
+init()
 
-    const emotionsArr = [
-    {
-        type: "happy",
-        value: Number(happySlider.value)
-    },
-    {
-        type: "hopeful",
-        value: Number(hopefulSlider.value)
-    },
-    {
-        type: "content",
-        value: Number(contentSlider.value)
-    },
-    {
-        type: "irritated",
-        value: Number(irritatedSlider.value)
-    },
-    {
-        type: "anxious",
-        value: Number(anxiousSlider.value)
-    },
-    {
-        type: "depressed",
-        value: Number(depressedSlider.value)
+
+function init(){
+    for (let i = 0; i< defaultEmotions.length; i++){
+        createSlider(defaultEmotions[i])
     }
-]
-    
-    console.log(emotionsArr)
+}
+
+function createSlider(emotion){
+    const slider = `
+            <div class="emotion-slider">
+                <label>${emotion}</label>
+                <input type="range" min="0" max="100" value="0" id="${emotion}Slider">
+            </div>`
+    emotionsPanel.innerHTML += slider
+}
+
+
+submitBtn.addEventListener('click', async () => {
+    let emotionsArr = []
+    const sliders = document.querySelectorAll(".emotion-slider")
+    for (let i = 0; i<sliders.length; i++){
+        const emotion = sliders[i].querySelector("label").innerHTML
+        const value = sliders[i].querySelector("input").value
+        emotionsArr.push({"type": emotion, "value": value})
+    }
+
+    console.log(emotionsArr )
     const response = await fetch("http://127.0.0.1:8000/entries", {
         method: "POST",
         headers: {

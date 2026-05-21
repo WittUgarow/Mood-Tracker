@@ -1,6 +1,6 @@
     const entriesDiv = document.getElementById("entryDiv")
 const userId = localStorage.getItem("userId")
-
+ 
 getEntries(userId).then((data) => {insertEntries(data)})
 
 async function getEntries(userId) {
