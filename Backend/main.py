@@ -55,7 +55,6 @@ class LoginData(BaseModel):
     username: str
     password: str
 
-
 def createToken(userId):
     payload = {
         "sub": str(userId),
@@ -63,8 +62,6 @@ def createToken(userId):
     }
     token = jwt.encode(payload, SECRET, algorithm=ALGORITHM)
     return token
-    
-
 
 @app.post("/login")
 def login(loginData : LoginData):
@@ -82,18 +79,6 @@ def login(loginData : LoginData):
             return {"status": True, "access_token": createToken(userId), "token_type": "bearer"} 
 
         return {"status": False}
-    
-@app.get("/users")
-def getUsers():
-    with conn.cursor() as cur:
-        # Execute a command
-        cur.execute("SELECT * FROM users") 
-        # Fetch data
-        result = cur.fetchall()
-        users = []
-        for item in result:
-            users.append({"id": item[0], "name": item[1], "email": item[2]})
-        return users
 
 @app.post("/users")
 def createUser(userInfo : CreateUser):
