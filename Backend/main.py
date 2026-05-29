@@ -20,10 +20,9 @@ import datetime
 from passlib.context import CryptContext
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
-
 DB_PASSWORD = os.getenv("DB_PASSWORD")
 DB_HOST = os.getenv("DB_IP")
-SECRET = os.getenv("SECRET")
+SECRET = os.getenv("SECRET_KEY")
 ALGORITHM = os.getenv("ALGORITHM")
 ACESS_TOKEN_EXPIRE_TIME = int(os.getenv("ACCESS_TOKEN_EXPIRE_MINUTES"))
 
@@ -59,7 +58,7 @@ class LoginData(BaseModel):
 
 def createToken(userId):
     payload = {
-        "sub": userId,
+        "sub": str(userId),
         "exp": datetime.datetime.now(datetime.timezone.utc) + datetime.timedelta(minutes=ACESS_TOKEN_EXPIRE_TIME)
     }
     token = jwt.encode(payload, SECRET, algorithm=ALGORITHM)
@@ -79,7 +78,6 @@ def login(loginData : LoginData):
         
         storedPassword = result[0]
         userId = result[1]
-        
         if pwd_context.verify(loginData.password, storedPassword):
             return {"status": True, "access_token": createToken(userId), "token_type": "bearer"} 
 
@@ -100,8 +98,6 @@ def getUsers():
 @app.post("/users")
 def createUser(userInfo : CreateUser):
     username = userInfo.username
-    print(userInfo.password)
-    print(type(userInfo.password))
     hashedPassword = pwd_context.hash(userInfo.password)
     with conn.cursor() as cur:
 
