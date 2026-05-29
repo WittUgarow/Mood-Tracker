@@ -6,7 +6,6 @@ from fastapi.security import OAuth2PasswordBearer
 
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="login")
 
-
 from pydantic import BaseModel
 from typing import List
 
@@ -43,13 +42,11 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-
 class Emotion(BaseModel):
     type: str
     value: int
 
 class EntryCreate(BaseModel):
-    user_id: int
     emotions: List[Emotion]
 
 class CreateUser(BaseModel):
@@ -110,11 +107,11 @@ def createUser(userInfo : CreateUser):
     
 
 
-
 @app.post("/entries")
-def createEntry(newEntry : EntryCreate):
+def createEntry(newEntry : EntryCreate, userId: str = Depends(getCurrentUser)):
+    
     with conn.cursor() as cur:
-        cur.execute("INSERT INTO entries (user_id) VALUES (%s) RETURNING id", (newEntry.user_id,))
+        cur.execute("INSERT INTO entries (user_id) VALUES (%s) RETURNING id", (userId,))
         entry_id = cur.fetchone()[0]
 
     insertEmotions(entry_id, newEntry.emotions)

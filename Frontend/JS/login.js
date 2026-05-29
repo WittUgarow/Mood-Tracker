@@ -16,7 +16,7 @@ loginBtn.addEventListener('click', async function(){
     }
 })
 
-async function attemptLogin(usernameIn, passwordIn){
+async function attemptLogin(usernameIn, passwordIn){    
     const response = await fetch("http://127.0.0.1:8000/login", {
         method: "POST",
         headers: {
