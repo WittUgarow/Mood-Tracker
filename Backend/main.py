@@ -48,6 +48,9 @@ class EntryCreate(BaseModel):
     user_id: int
     emotions: List[Emotion]
 
+class CreateUser(BaseModel):
+    username: str
+    password: str
 
 class LoginData(BaseModel):
     username: str
@@ -67,6 +70,7 @@ def createToken(userId):
 @app.post("/login")
 def login(loginData : LoginData):
     with conn.cursor() as cur:
+
         cur.execute("SELECT password, id FROM users WHERE name=%s", (loginData.username,))
         result = cur.fetchone()
 
@@ -93,6 +97,28 @@ def getUsers():
             users.append({"id": item[0], "name": item[1], "email": item[2]})
         return users
 
+@app.post("/users")
+def createUser(userInfo : CreateUser):
+    username = userInfo.username
+    print(userInfo.password)
+    print(type(userInfo.password))
+    hashedPassword = pwd_context.hash(userInfo.password)
+    with conn.cursor() as cur:
+
+        cur.execute("SELECT name FROM users WHERE name=(%s)", (username,))
+        if cur.fetchone():
+            return {"status": False, "reason": "username taken"}
+        
+    
+        cur.execute("INSERT INTO users (name, password) VALUES (%s, %s) RETURNING id", (username, hashedPassword))
+        userId = cur.fetchone()[0]
+
+    conn.commit()
+
+    return {"status": True, "userId": userId}
+    
+
+
 
 @app.post("/entries")
 def createEntry(newEntry : EntryCreate):
@@ -108,7 +134,7 @@ def insertEmotions(entryId, emotions):
     with conn.cursor() as cur:
         for emotion in emotions:    
             cur.execute("INSERT INTO emotions (entry_id, type, value) VALUES (%s, %s, %s)", (entryId, emotion.type, emotion.value))
-
+    
 
 @app.get("/entries")
 def getUserEntries(userId : int):
