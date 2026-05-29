@@ -13,6 +13,9 @@ from dotenv import load_dotenv
 import os
 load_dotenv()
 
+# JWT
+import jwt
+import datetime
 
 from passlib.context import CryptContext
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
@@ -50,6 +53,17 @@ class LoginData(BaseModel):
     username: str
     password: str
 
+
+def createToken(userId):
+    payload = {
+        "sub": userId,
+        "exp": datetime.datetime.now(datetime.timezone.utc) + datetime.timedelta(minutes=ACESS_TOKEN_EXPIRE_TIME)
+    }
+    token = jwt.encode(payload, SECRET, algorithm=ALGORITHM)
+    return token
+    
+
+
 @app.post("/login")
 def login(loginData : LoginData):
     with conn.cursor() as cur:
@@ -60,14 +74,12 @@ def login(loginData : LoginData):
             return {"status": False}
         
         storedPassword = result[0]
+        userId = result[1]
         
-        valid = pwd_context.verify(loginData.password, storedPassword)
-        return {"status": valid, "userID": result[1]}
-    
-        if result[0].decode('utf-8') == loginData.password:
-            return {"status": True, "userId": result[1]} 
-        else:
-            return {"status": False, "error": "Invalid password"}
+        if pwd_context.verify(loginData.password, storedPassword):
+            return {"status": True, "access_token": createToken(userId), "token_type": "bearer"} 
+
+        return {"status": False}
     
 @app.get("/users")
 def getUsers():
