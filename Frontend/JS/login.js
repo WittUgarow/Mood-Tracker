@@ -8,10 +8,11 @@ loginBtn.addEventListener('click', async function(){
     let result = await attemptLogin(name, password)
     console.log(result)
     if (result.status){
-        localStorage.setItem("name", name);
-        localStorage.setItem("password", password);
-        localStorage.setItem("userId", result.userId)
-        window.location.assign("main.html");
+        localStorage.setItem("access_token", result.access_token);
+        console.log(localStorage)
+        // localStorage.setItem("password", password);
+        // localStorage.setItem("userId", result.userId)
+        // window.location.assign("main.html");
     }
 })
 
