@@ -2,12 +2,19 @@ const entryTitleElem = document.querySelector(".entry-header")
 const entryNumElem = entryTitleElem.querySelector("h2")
 const dateElem = entryTitleElem.querySelector("p")
 const emotionsDiv = document.querySelector(".emotions")
+const token = localStorage.getItem("access_token")  
 
 async function init(){
     const params = new URLSearchParams(window.location.search)
     const entryId = params.get("id")
-    const response = await fetch(`http://127.0.0.1:8000/entries/${entryId}`)
+    const response = await fetch(`http://127.0.0.1:8000/entries/${entryId}`,{
+        method: "GET",
+        headers: {
+            "Authorization": `Bearer ${token}`
+        }
+    });
     const result = await response.json()
+    // console.log(result)
     const entry = result[0]
     fillEntry(entry.id, new Date(entry.created_at), entry.emotions)
 }

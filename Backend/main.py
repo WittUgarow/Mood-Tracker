@@ -133,27 +133,28 @@ def getUserEntries(userId: str = Depends(getCurrentUser)):
         cur.execute("""
             SELECT 
                 entries.id, 
+                entries.user_id,
                 entries.created_at, 
                 emotions.type, 
                 emotions.value 
             FROM entries 
             JOIN emotions 
-            ON entries.id=emotions.entry_id 
+                ON entries.id=emotions.entry_id 
             WHERE entries.user_id=%s 
             ORDER BY entries.created_at DESC
             """, (userId,))
-        
         result = cur.fetchall()
     return buildReturn(result)
     #return result
     
 
 @app.get("/entries/{entryId}")
-def getEntryById(entryId: int):
+def getEntryById(entryId: int, userId: str = Depends(getCurrentUser)):
     with conn.cursor() as cur:
         cur.execute("""
             SELECT 
                     entries.id,
+                    entries.user_id,
                     entries.created_at,
                     emotions.type,
                     emotions.value
@@ -163,6 +164,9 @@ def getEntryById(entryId: int):
             WHERE entries.id = %s
                     """, (entryId,))
         result = cur.fetchall()
+        if int(result[0][1])!=int(userId):
+            # return {"result": result[0][1], "userId": userId, "status":result[0][1]!=userId}
+            return {"status": "faliure", "reason": "user not authorized to acess entry"}
     return buildReturn(result)  
 
 
@@ -172,12 +176,13 @@ def buildReturn(result):
     #if entry.length = 0 return
     for i in range(len(result)):
         entryId = result[i][0]
-        date = result[i][1]
-        emotion = result[i][2]
-        value = result[i][3]
+        userId = result[i][1]
+        date = result[i][2]
+        emotion = result[i][3]
+        value = result[i][4]
         if entryId != currentId:
             currentId = result[i][0]
-            entries.append({"id": entryId, "created_at": date, "emotions": []})
+            entries.append({"id": entryId, "userId":userId, "created_at": date, "emotions": []})
         entries[len(entries)-1]["emotions"].append({"type": emotion, "value":value})
     
     for i in range(len(entries)):
