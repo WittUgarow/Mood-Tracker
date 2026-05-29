@@ -1,6 +1,11 @@
 # FastAPI
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi import Depends
+from fastapi.security import OAuth2PasswordBearer
+
+oauth2_scheme = OAuth2PasswordBearer(tokenUrl="login")
+
 
 from pydantic import BaseModel
 from typing import List
@@ -80,6 +85,11 @@ def login(loginData : LoginData):
 
         return {"status": False}
 
+def getCurrentUser(token: str = Depends(oauth2_scheme)):
+    payload = jwt.decode(token, SECRET, algorithms=["HS256"])
+    return payload["sub"]
+
+
 @app.post("/users")
 def createUser(userInfo : CreateUser):
     username = userInfo.username
@@ -118,7 +128,7 @@ def insertEmotions(entryId, emotions):
     
 
 @app.get("/entries")
-def getUserEntries(userId : int):
+def getUserEntries(userId: str = Depends(getCurrentUser)):
     with conn.cursor() as cur:
         cur.execute("""
             SELECT 

@@ -1,10 +1,15 @@
-    const entriesDiv = document.getElementById("entryDiv")
-const userId = localStorage.getItem("userId")
- 
-getEntries(userId).then((data) => {insertEntries(data)})
+const entriesDiv = document.getElementById("entryDiv")
+const token = localStorage.getItem("access_token"); 
 
-async function getEntries(userId) {
-    const response = await fetch(`http://127.0.0.1:8000/entries?userId=${userId}`);
+getEntries(token).then((data) => {insertEntries(data)})
+
+async function getEntries() {
+    const response = await fetch("http://127.0.0.1:8000/entries", {
+    method: "GET",
+    headers: {
+        "Authorization": `Bearer ${token}`
+    }
+    });
     const data = await response.json();
     return data;
 }
