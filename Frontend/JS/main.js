@@ -31,7 +31,7 @@ function createEntryElement(number, date, emotions){
             <div class="entry card" id="entry${number}">
                 <button class="inspect-btn"
                     onclick="window.location.href='../HTML/entry-view.html?id=${number}'">
-                    Inspect
+                    Details
                 </button>
 
                 <h3>Entry #${number}</h3>

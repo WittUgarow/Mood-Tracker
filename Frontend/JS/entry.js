@@ -1,13 +1,6 @@
 const defaultEmotions = ["happy", "hopeful", "content", "irritated", "anxious", "depressed"]
 const emotionsPanel = document.querySelector(".emotions")
 
-
-// const happySlider = document.getElementById("happySlider")
-// const hopefulSlider = document.getElementById("hopefulSlider")
-// const contentSlider = document.getElementById("contentSlider")
-// const irritatedSlider = document.getElementById("irritatedSlider")
-// const anxiousSlider = document.getElementById("anxiousSlider")
-// const depressedSlider = document.getElementById("depressedSlider")
 const submitBtn = document.getElementById("create-btn")
 const userId = localStorage.getItem("userId")
 

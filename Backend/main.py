@@ -1,25 +1,41 @@
+# FastAPI
 from fastapi import FastAPI
-from pydantic import BaseModel
-from typing import List
-import psycopg
 from fastapi.middleware.cors import CORSMiddleware
 
-# Connect using a connection string or URI
-conn = psycopg.connect("dbname=myapp user=myuser password=1234 host=10.0.1.163")
+from pydantic import BaseModel
+from typing import List
+
+#PostgreSQL
+import psycopg
+
+#.env
+from dotenv import load_dotenv
+import os
+load_dotenv()
+
+
+from passlib.context import CryptContext
+pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
+
+
+DB_PASSWORD = os.getenv("DB_PASSWORD")
+DB_HOST = os.getenv("DB_IP")
+SECRET = os.getenv("SECRET")
+ALGORITHM = os.getenv("ALGORITHM")
+ACESS_TOKEN_EXPIRE_TIME = int(os.getenv("ACCESS_TOKEN_EXPIRE_MINUTES"))
+
+conn = psycopg.connect(f"dbname=myapp user=myuser password={DB_PASSWORD} host={DB_HOST}")
 
 app = FastAPI()    
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],  # or ["http://127.0.0.1:5500"]
+    allow_origins=["*"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
 
-class LoginData(BaseModel):
-    username: str
-    password: str
 
 class Emotion(BaseModel):
     type: str
@@ -30,17 +46,24 @@ class EntryCreate(BaseModel):
     emotions: List[Emotion]
 
 
-@app.get("/")
-async def root():
-    return {"message": "Hello World"}
+class LoginData(BaseModel):
+    username: str
+    password: str
 
 @app.post("/login")
 def login(loginData : LoginData):
     with conn.cursor() as cur:
         cur.execute("SELECT password, id FROM users WHERE name=%s", (loginData.username,))
         result = cur.fetchone()
+
         if result is None:
-            return {"status": False, "error": "User not found"}
+            return {"status": False}
+        
+        storedPassword = result[0]
+        
+        valid = pwd_context.verify(loginData.password, storedPassword)
+        return {"status": valid, "userID": result[1]}
+    
         if result[0].decode('utf-8') == loginData.password:
             return {"status": True, "userId": result[1]} 
         else:
